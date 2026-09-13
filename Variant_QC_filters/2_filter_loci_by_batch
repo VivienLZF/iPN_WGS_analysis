@@ -1,0 +1,21 @@
+#!/bin/bash
+mkdir -p /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/LOGFILES/STAAR-Step0-QC_Filter_Vcfs
+nthreads=$(nproc)
+batches=(
+    "/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/CODE/Bash_Scripts/IPN/STAAR-Step0-QC_Filter_Vcfs/PNRR.txt"
+    "/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/CODE/Bash_Scripts/IPN/STAAR-Step0-QC_Filter_Vcfs/TWHJ.txt"
+    "/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/CODE/Bash_Scripts/IPN/STAAR-Step0-QC_Filter_Vcfs/WES.txt"
+    "/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/CODE/Bash_Scripts/IPN/STAAR-Step0-QC_Filter_Vcfs/Carlos.txt"
+)
+names=()
+for f in "${batches[@]}"; do
+  names+=("$(cut -d '.' -f 1 <<< "$(basename "$f")")")
+done
+chr=$(echo $1)
+input_file="/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/IPN/VCFs/chr${chr}/chr${chr}_IPN_QC_all.vcf.gz"
+sample=${batches[${LSB_JOBINDEX} - 1]}
+sample_name=${names[${LSB_JOBINDEX} - 1]}
+output="/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/IPN/VCFs/chr${chr}/chr${chr}_IPN_batchQC_${sample_name}.vcf.gz"
+
+bcftools view --threads ${nthreads} -S ${sample} ${input_file} | \
+bcftools filter -e 'F_MISSING>0.1' -Wtbi -Oz -o ${output}
