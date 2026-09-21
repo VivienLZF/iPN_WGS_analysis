@@ -1,7 +1,15 @@
-anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno"
-cut -f1,20 ${anno_dir}/CMT_LP.txt | sort -u > ${anno_dir}/unique_LP_IDandSYMBOL.txt
+#!/bin/bash
+##############################################################################
+
+## Prepare damaging variant set to test for regenie
+## Regenie step2 input files: unique_LP_IDs.txt, merged_masks.txt, anno_merged_input.txt, inclusion_sets.txt
+## Usage: bash make_set_for_regenie.sh
+
+##############################################################################
+
+anno_dir="vep_anno"
+cut -f1,20 ${anno_dir}/PN_damaging.txt | sort -u > ${anno_dir}/unique_LP_IDandSYMBOL.txt
 cut -f1 ${anno_dir}/unique_LP_IDandSYMBOL.txt | sort -u > ${anno_dir}/unique_LP_IDs.txt
-#anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno"
 
 awk -F '\t' '
 {
