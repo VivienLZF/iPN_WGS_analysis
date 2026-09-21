@@ -1,5 +1,13 @@
-Project_Name=$(echo $1)
-Merged_File_Prefix=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/ANALYSIS/INPUT_FILES/${Project_Name}/STAAR-Step0-Plink_Merge_Split_Beds/Merged_${Project_Name}_pruned)
-King_File_Prefix=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/ANALYSIS/INPUT_FILES/${Project_Name}/STAAR-Step0-King/King_${Project_Name})
+#!/bin/bash
+##############################################################################
+
+## kinship check
+## Usage: bash king.sh
+## Docker: elle72/star:vs4
+
+##############################################################################
+
+Merged_File_Prefix=$(echo regenie_step1_pruned)
+King_File_Prefix=$(echo King/King)
 
 king -b ${Merged_File_Prefix}.bed --ibdseg  --prefix ${King_File_Prefix}
