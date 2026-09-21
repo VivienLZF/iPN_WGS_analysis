@@ -1,6 +1,13 @@
 #!/bin/bash
-all_CMT="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/CMT_variants_with_header.txt"
-work_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno"
+##############################################################################
+
+## Following step 1, extract all Clinvar P/LP variants of PN-associated genes
+## Usage: bash extract_clinvarLP_fromPN.sh
+
+##############################################################################
+
+all_PN="PN_variants.txt"
+work_dir=""
 
 awk -F'\t' '
 BEGIN { OFS = "\t" }
@@ -20,7 +27,6 @@ BEGIN { OFS = "\t" }
   rev = F[hdr["ClinVar_CLNREVSTAT"]]
   
   canonical = F[hdr["CANONICAL"]]
-  lof_filter = F[hdr["LoF"]]
 
   # Ignore if SYMBOL or MAX_AF is missing or is pesudogene
   if (symbol == "-" || max_af == "-" || biotype ~ /pseudogene/) next
@@ -33,4 +39,4 @@ BEGIN { OFS = "\t" }
 
   if (criteria_met) print $0
 }
-' ${all_CMT} > ${work_dir}/CMT_clinvarP.txt
+' ${all_PN} > ${work_dir}/PN_clinvarP.txt

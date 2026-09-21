@@ -1,9 +1,14 @@
 #!/bin/bash
-#chr=$(echo ${LSB_JOBINDEX})
-#anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/genome_wide/merged_anno"
-#work_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/genome_wide/LP_by_chr"
-all_CMT="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/CMT_variants_with_header.txt"
-work_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno"
+##############################################################################
+
+## Following step 1, extract all damaging variants of PN-associated genes
+## Including loss-of-function and damaging missense predicted by AlphaMissense
+## Usage: bash extract_damaging_fromPN.sh
+
+##############################################################################
+
+all_PN="PN_variants.txt"
+work_dir=""
 
 awk -F'\t' '
 BEGIN { OFS = "\t" }
@@ -38,10 +43,6 @@ BEGIN { OFS = "\t" }
   cln = F[hdr["ClinVar_CLNSIG"]]
   rev = F[hdr["ClinVar_CLNREVSTAT"]]
   spliceai = F[hdr["SpliceAI_pred"]]
-  sift = F[hdr["SIFT"]]
-  polyphen = F[hdr["PolyPhen"]]
-  cadd = F[hdr["CADD_PHRED"]]
-  revel = F[hdr["REVEL"]]
   am_class = F[hdr["am_class"]]
   biotype = F[hdr["BIOTYPE"]]
   consequence = F[hdr["Consequence"]]
@@ -72,22 +73,19 @@ BEGIN { OFS = "\t" }
   eurg_value = eur_afg + 0
   sasg_value = sas_afg + 0
 
-  # filter out variants with maf_value >= 0.005 in any of 5 major populations)
+  # filter out variants with maf_value > 0.005 in any of 5 major populations in 1KG or gnomAD)
   if (afr_value > 0.005 || amr_value > 0.005 || eas_value > 0.005 || eur_value > 0.005 || sas_value > 0.005) next
   if (afre_value > 0.005 || amre_value > 0.005 || ease_value > 0.005 || eure_value > 0.005 || sase_value > 0.005) next
   if (afrg_value > 0.005 || amrg_value > 0.005 || easg_value > 0.005 || eurg_value > 0.005 || sasg_value > 0.005) next
 
-  # remove clinvar benign variants:
+  # remove high-confidence clinvar benign variants:
   if ((cln == "Benign" || cln == "Likely_benign" || cln == "Benign/Likely_benign") && (rev == "criteria_provided,_multiple_submitters,_no_conflicts" || rev == "reviewed_by_expert_panel")) next
 
   criteria_met = 0
 
-  # keep HIGH IMPACT variations unless noncoding
+  # keep HIGH IMPACT variations unless noncoding, or high-confidence LoF variants
   if (impact == "HIGH" && consequence !~ /non_coding_transcript/ && lof_filter !="LC") criteria_met = 1
   else if (lof_filter =="HC") criteria_met = 1
-
-  # keep ClinVar pathogenic variants
-  #else if (cln == "Pathogenic" || cln == "Likely_pathogenic" || cln == "Pathogenic/Likely_pathogenic") criteria_met = 1
 
   # keep variants with SpliceAI score > 0.8
   else if (spliceai != "-") {
@@ -102,16 +100,11 @@ BEGIN { OFS = "\t" }
     }
   }
 
-  # In silico prediction: 3 out of 5 agree on pathogenecity
+  # In silico prediction: AlphaMissense
     count = 0
-    #if (sift ~ /deleterious/) count++
-    #if (polyphen ~ /probably_damaging/) count++
-    #if (cadd + 0 >= 20) count++
-    #if (revel + 0 > 0.5) count++
     if (am_class == "likely_pathogenic") count++
     if (count >= 1) criteria_met = 1
 
   if (criteria_met) print $0
 }
-' ${all_CMT} > ${work_dir}/CMT_LP.txt
-#${anno_dir}/merged_anno_chr${chr}.txt > ${work_dir}/new_LP_chr${chr}.txt
+' ${all_PN} > ${work_dir}/PN_damaging.txt
