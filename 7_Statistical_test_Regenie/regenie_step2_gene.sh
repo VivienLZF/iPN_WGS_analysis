@@ -1,6 +1,7 @@
 #!/bin/bash
 ##############################################################################
 
+## Reference: https://rgcgithub.github.io/regenie/
 ## Regenie step2 (gene-based)
 ## Binary trait, with Firth correction, adjusting for SEX and PC1-10
 ## Usage: bash regenie_step2_gene.sh

@@ -1,6 +1,7 @@
 #!/bin/bash
 ##############################################################################
 
+## Reference: https://rgcgithub.github.io/regenie/
 ## Regenie step1: fit whole genome regression model
 ## Input: LD pruned bed, covariate and phenotype file
 ## Output: fit_bin_out_1.loco, fit_bin_out.log, fit_bin_out_pred.list

@@ -1,8 +1,17 @@
 #!/bin/bash
-#awk '$7>0' test_bin_out_spa_DIAGNOSIS.regenie > case_variants.txt
-work_dir="/storage1/fs1/jin810/Active/testing/vivien/regenie/5.14_new"
-TXT="${work_dir}/2clinvar_filtered_test_bin_out_spa_DIAGNOSIS.regenie"
-VCF_DIR="/storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/IPN/VCFs"
+##############################################################################
+
+## The purpose is to extract variant carrier IDs
+## Extract vcf lines for variants included in regenie step2 (variant-based) output
+## Usage: bash post_extract_carriers.sh
+## Docker: staphb/bcftools:latest
+
+##############################################################################
+
+
+work_dir=""
+TXT="${work_dir}/test_bin_out_firth_DIAGNOSIS.regenie"
+VCF_DIR="VCFs"
 OUTPUT_FILE="${work_dir}/carrier_vcf.txt"
 TEMP_DIR=$(mktemp -d)
 
