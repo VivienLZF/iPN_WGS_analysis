@@ -1,10 +1,14 @@
-Project_Name=$(echo $1)
+#!/bin/bash
+##############################################################################
 
-#VCF_File=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/${Project_Name}/VCFs/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_${Project_Name}_afterQC.vcf.gz)
-VCF_File=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/${Project_Name}/VCFs/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_hwe.vcf.gz)
-Bed_File=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/ANALYSIS/INPUT_FILES/${Project_Name}/STAAR-Step0-Plink_Make_Split_Beds/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_bed)
+## Make bed file from filtered vcf split by chr
+## Usage: bash make_bed_by_chr.sh
+## Submit job array with index 1-22
+## Docker: elle72/star:vs4
 
-#Bed_File=$(echo /storage1/fs1/jin810/Active/testing/vivien/STAAR_new/INPUT_FILES/${Project_Name}/VCFs/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_bed)
-#nthreads=$(nproc)
+##############################################################################
+
+VCF_File=$(echo /VCFs/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_hwe.vcf.gz)
+Bed_File=$(echo Plink_Make_Split_Beds/chr${LSB_JOBINDEX}/chr${LSB_JOBINDEX}_bed)
+
 plink --vcf-half-call r --vcf ${VCF_File} --double-id --id-delim ' ' --make-bed --out ${Bed_File}
-echo 'Done'
