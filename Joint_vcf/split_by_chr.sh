@@ -1,6 +1,11 @@
 #!/bin/bash
+##############################################################################
+
 ## Split the orignal per-sample (g)vcf by chromosome.
 ## Usage: bash split_by_chr.sh $chr
+## Docker: elle72/glnexus:vs2
+
+##############################################################################
 
 # Define your list of names
 input_dir=""
