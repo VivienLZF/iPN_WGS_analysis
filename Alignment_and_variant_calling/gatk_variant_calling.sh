@@ -5,12 +5,8 @@
 # Skip samples with gvcf already generated in out_dir.
 ## Docker: broadinstitute/gatk:latest
 
-## author: Zefan Li
-## contact: l.vivien@wustl.edu
-
 ##############################################################################
 
-#!/bin/bash
 export LSF_DOCKER_VOLUMES=""
 
 REF="Homo_sapiens_assembly38.fasta"
