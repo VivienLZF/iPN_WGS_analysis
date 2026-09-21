@@ -1,21 +1,23 @@
 #!/bin/bash
-export LSF_DOCKER_VOLUMES='/storage1/fs1/jin810/Active:/storage1/fs1/jin810/Active /storage2/fs1/epigenome/Active/shared_smaht:/storage2/fs1/epigenome/Active/shared_smaht'
-work_dir="/storage1/fs1/jin810/Active/testing/vivien/regenie/5.14_new"
-#anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/genome_wide/LP_by_chr"
-#anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno"
-anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/4.27_164PN/plof_am"
-#anno_dir="/storage1/fs1/jin810/Active/testing/vivien/vep_anno/before12.26.25/10.3CMT"
-log_dir="/storage1/fs1/jin810/Active/testing/vivien/regenie/5.14_new/log"
-mkdir -p ${log_dir}
+##############################################################################
 
-bsub -R "rusage[mem=60G,tmp=40G] span[hosts=1]" -G compute-jin810 -n 1 -oo "${log_dir}/regenie_step2_gene_based_%J.log" -q general -a 'docker(briansha/regenie:v4.0)' LC_ALL=C \
-LANGUAGE= \
+## Regenie step2 (gene-based)
+## Binary trait, with Firth correction, adjusting for SEX and PC1-10
+## Usage: bash regenie_step2_gene.sh
+## Docker: briansha/regenie:v4.0
+
+##############################################################################
+
+work_dir=""
+anno_dir="vep_anno"
+
 regenie \
   --step 2 \
   --bed ${work_dir}/step2 \
-  --covarFile  ${work_dir}/new_covar.txt \
+  --covarFile  ${work_dir}/covar.txt \
   --phenoFile  ${work_dir}/pheno.txt \
   --catCovarList SEX \
+  --covarColList PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10 \
   --bsize 200 \
   --bt \
   --pred ${work_dir}/fit_bin_out_pred.list \
@@ -24,13 +26,8 @@ regenie \
   --extract-sets ${anno_dir}/inclusion_sets.txt \
   --mask-def mask_LP.txt \
   --rgc-gene-p \
-  --out noPN_test_bin_out_spa_gene_based \
+  --out test_bin_out_firth_gene_based \
   --minMAC 1 \
-  --spa \
+  --firth --approx \
   --af-cc \
-  --keep ${work_dir}/noPN_control_samples1705.txt
-  #--spa
-  #--firth --approx
-  #--ignore-pred
-  #--minMAC 1
-  #--vc-tests skat,skato,skato-acat,acatv,acato,acato-full
+  --keep ${work_dir}/samples_list.txt

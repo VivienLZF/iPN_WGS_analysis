@@ -20,4 +20,5 @@ regenie \
   --covarColList PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10 \
   --bsize 1000 \
   --bt \
-  --out fit_bin_out
+  --out fit_bin_out \
+  --keep ${work_dir}/samples_list.txt
