@@ -22,14 +22,13 @@ BEGIN { OFS = "\t" }
   split($0, F, FS)
   symbol = F[hdr["SYMBOL"]]
   
-  impact = F[hdr["IMPACT"]]
   cln = F[hdr["ClinVar_CLNSIG"]]
   rev = F[hdr["ClinVar_CLNREVSTAT"]]
   
   canonical = F[hdr["CANONICAL"]]
 
-  # Ignore if SYMBOL or MAX_AF is missing or is pesudogene
-  if (symbol == "-" || max_af == "-" || biotype ~ /pseudogene/) next
+  # Ignore if SYMBOL is missing
+  if (symbol == "-") next
   # only look at canonical transcript
   if (canonical != "YES") next
   criteria_met = 0
